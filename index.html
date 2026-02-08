@@ -8,18 +8,22 @@
   <meta name="description" content="Menu pesanan online Dapur Mommy">
 
   <style>
-    /* --- CSS VARIABLES & RESET --- */
+    /* --- CSS VARIABLES (Sama dengan Admin) --- */
     :root {
-      --primary: #e21b70;
-      --primary-dark: #c2185b;
-      --primary-light: #f8bbd0;
-      --bg: #f4f6f8;
-      --card: #ffffff;
+      --primary: #db2777;
+      /* Rose Pink */
+      --primary-light: #fce7f3;
+      --primary-dark: #be185d;
+      --bg: #fff1f2;
+      --surface: #ffffff;
       --text-main: #1f2937;
       --text-sub: #6b7280;
       --success: #10b981;
       --danger: #ef4444;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --warning: #f59e0b;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       --radius: 16px;
     }
 
@@ -28,49 +32,47 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text-main);
       padding-bottom: 90px;
-      /* Ruang untuk scroll supaya header tak tutup bawah */
-      line-height: 1.5;
+      /* Ruang untuk scroll */
     }
 
-    /* --- UI COMPONENTS --- */
-    /* Toast Notification */
+    /* --- TOAST NOTIFICATION --- */
     .toast-container {
       position: fixed;
-      bottom: 20px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      pointer-events: none;
       width: 90%;
       max-width: 400px;
+      pointer-events: none;
     }
 
     .toast {
-      background: #333;
+      background: #1f2937;
       color: #fff;
-      padding: 12px 20px;
+      padding: 14px 24px;
       border-radius: 50px;
       font-size: 14px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
       text-align: center;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .toast.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     .toast.success {
@@ -89,7 +91,7 @@
       top: 0;
       z-index: 50;
       box-shadow: 0 4px 20px rgba(226, 27, 112, 0.25);
-      padding: 12px 16px;
+      padding: 16px;
     }
 
     .header-top {
@@ -100,19 +102,19 @@
     }
 
     .header h1 {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
     }
 
+    /* Search Bar */
     .search-bar {
       position: relative;
     }
 
     .search-bar input {
       width: 100%;
-      padding: 10px 16px;
-      padding-left: 40px;
+      padding: 12px 16px 12px 42px;
       border-radius: 12px;
       border: none;
       font-size: 14px;
@@ -129,25 +131,25 @@
 
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #999;
-      font-size: 14px;
+      color: #888;
     }
 
+    /* Cart Trigger Button */
     .cart-trigger {
       position: relative;
       background: rgba(255, 255, 255, 0.2);
       border: none;
       color: #fff;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -158,19 +160,19 @@
 
     .cart-badge {
       position: absolute;
-      top: -2px;
-      right: -2px;
+      top: -4px;
+      right: -4px;
       background: var(--text-main);
       color: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      min-width: 18px;
-      height: 18px;
-      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 800;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 4px;
+      padding: 0 5px;
       border: 2px solid var(--primary);
       transform: scale(0);
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -180,18 +182,16 @@
       transform: scale(1);
     }
 
-    /* --- CATEGORY TABS --- */
+    /* --- CATEGORY NAV (Sticky) --- */
     .kategori-nav {
       display: flex;
       gap: 10px;
       padding: 16px;
       overflow-x: auto;
       scrollbar-width: none;
-      /* Firefox */
       -ms-overflow-style: none;
-      /* IE/Edge */
       position: sticky;
-      top: 80px;
+      top: 85px;
       /* Di bawah header */
       z-index: 40;
       background: var(--bg);
@@ -202,42 +202,44 @@
     }
 
     .cat-btn {
-      background: var(--card);
+      background: var(--surface);
       color: var(--text-sub);
       border: 1px solid transparent;
-      padding: 8px 18px;
-      border-radius: 20px;
+      padding: 10px 20px;
+      border-radius: 25px;
       font-size: 13px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
       transition: all 0.2s;
     }
 
     .cat-btn.active {
       background: var(--primary);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(226, 27, 112, 0.3);
+      box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
+      transform: translateY(-1px);
     }
 
     /* --- MENU GRID --- */
     .menu-grid {
-      padding: 0 16px 20px;
+      padding: 10px 16px 20px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 16px;
     }
 
     .menu-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
       position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.02);
     }
 
     .menu-card:active {
@@ -246,7 +248,7 @@
 
     .menu-card.out-of-stock {
       opacity: 0.6;
-      filter: grayscale(0.8);
+      filter: grayscale(1);
     }
 
     .card-img-wrapper {
@@ -268,20 +270,21 @@
 
     .stock-badge {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.7);
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
       color: #fff;
-      padding: 2px 8px;
-      border-radius: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .stock-badge.low {
-      background: #f59e0b;
+      background: var(--warning);
       color: #fff;
     }
 
@@ -290,7 +293,7 @@
     }
 
     .card-body {
-      padding: 12px;
+      padding: 14px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -299,18 +302,20 @@
     .card-title {
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      color: var(--text-main);
     }
 
     .card-stock-text {
       font-size: 11px;
       color: var(--text-sub);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
 
     .card-footer {
@@ -323,38 +328,45 @@
     .card-price {
       font-weight: 800;
       color: var(--primary);
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .btn-add {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
       background: var(--primary);
       color: white;
       border: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
-      transition: background 0.2s;
+      box-shadow: 0 4px 6px rgba(219, 39, 119, 0.3);
+      transition: transform 0.1s;
+    }
+
+    .btn-add:active {
+      transform: scale(0.9);
     }
 
     .btn-add:disabled {
       background: #d1d5db;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
-    /* --- CART MODAL --- */
+    /* --- CART MODAL (Slide Up) --- */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
       z-index: 100;
-      backdrop-filter: blur(4px);
       align-items: flex-end;
+      /* Mobile default: bottom */
       justify-content: center;
     }
 
@@ -363,16 +375,17 @@
     }
 
     .cart-sheet {
-      background: var(--card);
+      background: var(--surface);
       width: 100%;
       max-width: 500px;
       border-radius: 24px 24px 0 0;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
       padding: 24px;
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .modal-overlay.open .cart-sheet {
@@ -389,15 +402,17 @@
     .cart-header h2 {
       font-size: 20px;
       color: var(--primary);
+      font-weight: 800;
     }
 
     .close-modal {
       background: none;
       border: none;
-      font-size: 24px;
+      font-size: 28px;
       color: var(--text-sub);
       cursor: pointer;
-      padding: 4px;
+      line-height: 1;
+      padding: 0 10px;
     }
 
     /* Cart Items */
@@ -415,12 +430,14 @@
     }
 
     .item-info h4 {
-      font-size: 14px;
+      font-size: 15px;
       margin-bottom: 4px;
+      font-weight: 600;
     }
 
     .item-price {
-      font-size: 12px;
+      margin: 2px 0 0;
+      font-size: 13px;
       color: var(--text-sub);
     }
 
@@ -428,7 +445,7 @@
       display: flex;
       align-items: center;
       background: #f9fafb;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 4px;
       gap: 12px;
     }
@@ -438,7 +455,7 @@
       height: 28px;
       border: 1px solid #e5e7eb;
       background: #fff;
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -451,7 +468,7 @@
       background: #f3f4f6;
     }
 
-    /* Cart Summary & Form */
+    /* Cart Summary */
     .summary-row {
       display: flex;
       justify-content: space-between;
@@ -469,6 +486,7 @@
       padding-top: 16px;
     }
 
+    /* Form */
     .form-group {
       margin-bottom: 12px;
     }
@@ -485,8 +503,8 @@
     .form-select {
       width: 100%;
       padding: 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
+      border: 2px solid #f3f4f6;
+      border-radius: 12px;
       font-size: 14px;
       background: #f9fafb;
       outline: none;
@@ -501,32 +519,37 @@
 
     .btn-checkout {
       width: 100%;
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       border: none;
       padding: 16px;
-      border-radius: 12px;
+      border-radius: 16px;
       font-size: 16px;
       font-weight: 800;
-      margin-top: 16px;
+      margin-top: 20px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(226, 27, 112, 0.3);
+      box-shadow: 0 4px 15px rgba(219, 39, 119, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: transform 0.1s;
+    }
+
+    .btn-checkout:active {
+      transform: scale(0.98);
     }
 
     .btn-checkout:disabled {
-      background: #ccc;
+      background: #d1d5db;
       box-shadow: none;
       cursor: not-allowed;
     }
 
-    /* Loading Spinner */
+    /* Spinner */
     .spinner {
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: white;
       border-radius: 50%;
@@ -548,6 +571,7 @@
       }
     }
 
+    /* Desktop View Adjustment */
     @media (min-width: 600px) {
       .modal-overlay {
         align-items: center;
@@ -557,6 +581,7 @@
         border-radius: 24px;
         transform: scale(0.9);
         opacity: 0;
+        max-height: 85vh;
       }
 
       .modal-overlay.open .cart-sheet {
@@ -569,7 +594,7 @@
 
 <body>
 
-  <!-- NOTIFIKASI TOAST -->
+  <!-- TOAST -->
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- HEADER -->
@@ -588,9 +613,7 @@
   </header>
 
   <!-- NAVIGASI KATEGORI -->
-  <nav class="kategori-nav" id="kategoriList">
-    <!-- Buttons akan di-generate oleh JS -->
-  </nav>
+  <nav class="kategori-nav" id="kategoriList"></nav>
 
   <!-- SENARAI MENU -->
   <main>
@@ -609,9 +632,7 @@
         <button class="close-modal" id="closeCart">&times;</button>
       </div>
 
-      <div id="cartItems" class="cart-list">
-        <!-- Items di sini -->
-      </div>
+      <div id="cartItems" class="cart-list"></div>
 
       <div class="cart-summary">
         <div class="summary-row">
@@ -666,10 +687,10 @@
 
   <script>
     // --- KONFIGURASI ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbxC52Ufex1qLRQr1CViPdcE2oWoJpE44LjBYJe47B02KXBSq9Vy_aZ8a_NiB95bHr6K2A/exec";
+    // GANTIKAN INI DENGAN URL WEB APP ANDA
+    const API_URL = "https://script.google.com/macros/s/AKfycbyzXa2B0_o_nVQjevAEN7dCXB4CyxScPMfukUj2OWHZV9c7Y8B8lPdjpLtLt6cqOiafSQ/exec";
     const WHATSAPP_NO = "601172431562";
 
-    // --- STATE DATA ---
     let menuData = [];
     let cart = [];
 
@@ -692,32 +713,28 @@
       }
     };
 
-    // --- 1. SISTEM NOTIFIKASI (TOAST) ---
+    // --- 1. SISTEM NOTIFIKASI ---
     function showToast(message, type = 'normal') {
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
       toast.textContent = message;
       els.toastContainer.appendChild(toast);
-
-      // Trigger animation
       setTimeout(() => toast.classList.add('show'), 10);
-
-      // Remove after 3s
       setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     }
 
-    // --- 2. DATA FETCHING & RENDERING ---
+    // --- 2. DATA FETCHING ---
     async function initMenu() {
       try {
-        const res = await fetch(API_URL + "?action=menu");
+        const res = await fetch(API_URL + "?action=all_menu");
         const json = await res.json();
 
         if (!json.status || !json.data) throw new Error(json.msg || "Gagal memuat data");
 
-        // Flatten data object
+        // Flatten data
         menuData = [];
         const categories = new Set();
 
@@ -729,9 +746,11 @@
               name: m.menu,
               price: Number(m.harga),
               stok: Number(m.stok),
+              status: m.status, // <--- PENTING: Ambil status untuk semak item
               img: m.gambar || `https://picsum.photos/seed/${m.id}/300/200`,
               cat: cat.toLowerCase(),
-              originalCat: cat
+              originalCat: cat,
+              originalPrice: Number(m.harga_asal) // <--- PENTING: Ambil harga asal
             });
           });
         });
@@ -741,11 +760,12 @@
 
       } catch (err) {
         console.error(err);
-        showToast("Gagal memuatkan menu. Sila refresh.", "error");
-        els.menuList.innerHTML = `<p style="text-align:center; color:var(--danger)">Gagal memuatkan data.<br>${err.message}</p>`;
+        showToast("Gagal memuatkan menu.", "error");
+        els.menuList.innerHTML = `<p style="text-align:center; color:var(--danger); padding:40px;">Gagal memuatkan data.<br>Sila cuba lagi.</p>`;
       }
     }
 
+    // --- 3. RENDERING ---
     function renderCategories(list) {
       els.kategoriList.innerHTML = `<button class="cat-btn active" onclick="filterMenu('all', this)">Semua</button>`;
       list.forEach(cat => {
@@ -758,34 +778,31 @@
     }
 
     function filterMenu(category, btnElement) {
-      // Update active button
       if (btnElement) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btnElement.classList.add('active');
       }
-
-      const filtered = category === 'all'
-        ? menuData
-        : menuData.filter(m => m.cat === category);
-
+      const filtered = category === 'all' ? menuData : menuData.filter(m => m.cat === category);
       renderMenu(filtered);
     }
 
     function renderMenu(data) {
       els.menuList.innerHTML = "";
-
       if (data.length === 0) {
-        els.menuList.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:40px; color:#888">Tiada menu dijumpai.</p>`;
+        els.menuList.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:40px; color:#888;">Tiada menu dijumpai.</p>`;
         return;
       }
 
       data.forEach(m => {
+        // <--- PENTING: Sembunyikan item TIDAK AKTIF / HABIS STOK
+        if (m.status !== "AKTIF") return;
+
         const isSoldOut = m.stok <= 0;
         const isLowStock = m.stok > 0 && m.stok <= 3;
 
         let stockBadge = '';
         if (isSoldOut) stockBadge = `<span class="stock-badge empty">HABIS</span>`;
-        else if (isLowStock) stockBadge = `<span class="stock-badge low">Stok: ${m.stok}</span>`;
+        else if (isLowStock) stockBadge = `<span class="stock-badge low">STOK ${m.stok}</span>`;
 
         const card = document.createElement('div');
         card.className = `menu-card ${isSoldOut ? 'out-of-stock' : ''}`;
@@ -796,7 +813,7 @@
           </div>
           <div class="card-body">
             <h3 class="card-title">${m.name}</h3>
-            <p class="card-stock-text">${isSoldOut ? 'Menunggu stok baru' : `Tersedia: ${m.stok} unit`}</p>
+            <p class="card-stock-text">${isSoldOut ? 'Sedang diulang kaji' : `Tersedia: ${m.stok} unit`}</p>
             <div class="card-footer">
               <span class="card-price">RM ${m.price.toFixed(2)}</span>
               <button class="btn-add" onclick="addToCart('${m.id}')" ${isSoldOut ? 'disabled' : ''} aria-label="Tambah ${m.name}">
@@ -809,16 +826,19 @@
       });
     }
 
-    // --- 3. CART LOGIC ---
+    // --- 4. CART LOGIC ---
     function addToCart(id) {
       const menuItem = menuData.find(m => m.id === id);
-      if (!menuItem || menuItem.stok <= 0) return;
 
-      // Cek dalam cart
+      // <--- PENTING: Elak ralat jika item tiada di dalam menuData (atau mungkin di hide status)
+      if (!menuItem || menuItem.stok <= 0) {
+        showToast("Stok habis!", "error");
+        return;
+      }
+
       const existing = cart.find(c => c.id === id);
-
-      // Cek stok global vs cart
       const currentQtyInCart = existing ? existing.qty : 0;
+
       if (currentQtyInCart >= menuItem.stok) {
         showToast("Stok tidak mencukupi!", "error");
         return;
@@ -830,15 +850,11 @@
         cart.push({ ...menuItem, qty: 1 });
       }
 
-      // Update stok visual (hanya session)
+      // Update visual stock locally
       menuItem.stok--;
-
-      // Re-render specific card stock (optimization: instead of full render)
-      renderMenu(menuData); // Simple way to ensure UI syncs
+      renderMenu(menuData);
       updateCartUI();
-
-      // Feedback halus
-      showToast("Menu ditambah ke troli");
+      showToast("Menu ditambah ke troli", "success");
     }
 
     function updateCartItem(id, change) {
@@ -849,6 +865,7 @@
 
       const newQty = item.qty + change;
 
+      // Logic stok
       if (change > 0) {
         if (menuItem.stok <= 0) {
           showToast("Stok habis!", "error");
@@ -870,12 +887,10 @@
     }
 
     function updateCartUI() {
-      // Update badge
       const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
       els.cartCount.textContent = totalQty;
       els.cartCount.classList.toggle('visible', totalQty > 0);
 
-      // Render Cart Items HTML
       els.cartItems.innerHTML = cart.length === 0
         ? `<p style="text-align:center; color:#999; padding:20px;">Troli anda kosong.</p>`
         : cart.map(item => `
@@ -908,9 +923,11 @@
       els.totals.sub.textContent = `RM${subTotal.toFixed(2)}`;
       els.totals.delivery.textContent = kawasanVal === "WALK-IN" ? "Percuma" : `RM${deliveryFee.toFixed(2)}`;
       els.totals.grand.textContent = `RM${grandTotal.toFixed(2)}`;
+
+      return { subTotal, deliveryFee, grandTotal };
     }
 
-    // --- 4. CHECKOUT LOGIC ---
+    // --- 5. CHECKOUT (SYNC DENGAN BACKEND) ---
     async function submitOrder() {
       if (cart.length === 0) {
         showToast("Troli kosong, pilih menu dulu!", "error");
@@ -918,37 +935,50 @@
       }
 
       const nama = document.getElementById('nama').value.trim();
-      const alamat = document.getElementById('alamat').value.trim();
+      const alamatInput = document.getElementById('alamat').value.trim();
       const kawasan = document.getElementById('kawasan').value;
       const pembayaran = document.getElementById('pembayaran').value;
 
-      if (!nama || !alamat) {
+      if (!nama || !alamatInput) {
         showToast("Sila isi nama dan alamat.", "error");
-        // Highlight input error
-        if (!nama) document.getElementById('nama').focus();
-        else if (!alamat) document.getElementById('alamat').focus();
         return;
       }
 
-      // Set Loading State
+      // Loading State
       els.btnSubmit.classList.add('loading');
       els.btnSubmit.disabled = true;
 
+      // Calculate totals again to be sure
+      const { subTotal, deliveryFee, grandTotal } = updateCartTotals();
+
+      // Format alamat lengkap
+      // <--- PENTING: Formatkan alamat supaya mesra di WhatsApp
+      let alamatLengkap = kawasan === "WALK-IN" ? "AMBIL SENDIRI" : `${kawasan}, ${alamatInput}`;
+
+      // Mapping pembayaran untuk padanan API (CASH -> Tunai)
+      const bayaranAPI = pembayaran === "CASH" ? "Tunai" : pembayaran;
+
+      // Payload mengikut struktur API create_order
+      // <--- PENTING: Pastikan 'harga_asal' dihantar untuk pengira untung
       const payload = {
-        action: "order",
-        nama: nama,
-        alamat: alamat,
-        jenis: "ONLINE",
-        kawasan: kawasan,
-        bayaran: pembayaran,
-        cod: 0,
-        items: cart.map(i => ({ id: i.id, qty: i.qty }))
+        action: "create_order",
+        pelanggan: nama,
+        alamat: alamatLengkap,
+        bayaran: bayaranAPI,
+        jumlah: grandTotal,
+        item: cart.map(i => ({
+          menuId: i.id,
+          nama: i.name,
+          harga: i.price,
+          harga_asal: i.originalPrice, // Wajib ada untuk kira untung
+          qty: i.qty
+        }))
       };
 
       try {
         const res = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "text/plain" }, // Trick for Google Apps Script CORS
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(payload)
         });
 
@@ -959,21 +989,23 @@
         // Success
         showToast("Order berjaya dihantar!", "success");
 
-        // Buka WhatsApp
-        if (result.data && result.data.whatsapp) {
-          const waText = encodeURIComponent(result.data.whatsapp);
-          setTimeout(() => {
-            window.open(`https://wa.me/${WHATSAPP_NO}?text=${waText}`, "_blank");
-          }, 500);
-        }
+        // Buat WhatsApp Text (Kerana API tak generate text untuk user)
+        const waText = `*PESANAN ONLINE - DAPUR MOMMY*\n\n` +
+          `Pelanggan: ${nama}\n` +
+          `Alamat: ${alamatLengkap}\n` +
+          `Bayaran: ${bayaranAPI}\n\n` +
+          cart.map(i => `- ${i.name} x${i.qty} ... RM ${(i.price * i.qty).toFixed(2)}`).join('\n') +
+          `\n*TOTAL: RM ${grandTotal.toFixed(2)}*`;
 
-        // Reset Form & Cart
+        setTimeout(() => {
+          window.open(`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(waText)}`, "_blank");
+        }, 500);
+
+        // Reset
         cart = [];
         document.getElementById('orderForm').reset();
         els.cartModal.classList.remove('open');
-
-        // Reset Stock Data (Reload fresh data untuk ketepatan)
-        initMenu();
+        initMenu(); // Reload fresh stock
         updateCartUI();
 
       } catch (err) {
@@ -985,7 +1017,7 @@
       }
     }
 
-    // --- 5. EVENT LISTENERS & INIT ---
+    // --- EVENT LISTENERS ---
     els.cartBtnTop.onclick = () => els.cartModal.classList.add('open');
     els.closeCart.onclick = () => els.cartModal.classList.remove('open');
     els.cartModal.onclick = (e) => {
@@ -998,7 +1030,7 @@
       renderMenu(filtered);
     });
 
-    // Start App
+    // Init
     initMenu();
 
   </script>
