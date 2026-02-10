@@ -651,17 +651,17 @@
 
       <form id="orderForm" onsubmit="event.preventDefault(); submitOrder();">
         <div class="form-group">
-          <label class="form-label">Nama Penuh</label>
+          <label for="nama" class="form-label">Nama Penuh</label>
           <input type="text" id="nama" class="form-input" placeholder="Contoh: Ali Bin Abu" required>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Alamat Penghantaran</label>
+          <label for="alamat" class="form-label">Alamat Penghantaran</label>
           <textarea id="alamat" class="form-input" rows="2" placeholder="Alamat lengkap..." required></textarea>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Kawasan</label>
+          <label for="kawasan" class="form-label">Kawasan</label>
           <select id="kawasan" class="form-select" onchange="updateCartTotals()">
             <option value="WALK-IN">Ambil Sendiri (Walk-in)</option>
             <option value="RESIDEN1">Residen 1 (+RM1.00)</option>
@@ -670,7 +670,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Kaedah Bayar</label>
+          <label for="pembayaran" class="form-label">Kaedah Bayar</label>
           <select id="pembayaran" class="form-select">
             <option value="CASH">Tunai (COD)</option>
             <option value="QR">QR Code (Online)</option>
