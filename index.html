@@ -998,7 +998,7 @@
           `\n*TOTAL: RM ${grandTotal.toFixed(2)}*`;
 
         setTimeout(() => {
-          window.open(`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(waText)}`, "_blank");
+          window.location.href=`https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(waText)}`;
         }, 500);
 
         // Reset
